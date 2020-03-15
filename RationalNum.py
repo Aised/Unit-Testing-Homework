@@ -1,87 +1,95 @@
+from math import gcd
 
-
+def lcm(a, b):
+        return abs(a*b) // int(gcd(a, b))
 
 class RationalNumber():
 
-    def lcm(a, b):
-    '''calculate the least common multiple of two positive integers'''
-    #print(' in lcm ')
-    return (a*b)//gcd(a,b)
-
-    def gcd(bigger, smaller):
-        '''compute the greatest common divisor of two positive integers'''
-    #print(' in gcd ')
-    if not bigger > smaller :
-        bigger, smaller = smaller, bigger
-    while smaller != 0:
-        remainder = bigger % smaller
+    def __init__(self, Numerator=0, Denominator=1):
+        if type(Numerator) != int and type(Denominator) != int:
+            raise ValueError("Numerator and Denominator should be integers")
+        if Denominator == 0:
+            raise ValueError("Denominator can't be 0")
         
-        bigger, smaller = smaller, remainder
-    return bigger 
+        if Numerator == 0:
+            Denominator =1
 
-    def __init__(self,Numerator= 0,Denominator= 1):
-        if type(Numerator)!= int and type(Denominator)!= int :
-            raise(ValueError("Numerator and Denominator should be integers"))
-        self.Numerator = Numerator
-        self.Denominator = Denominator
+        (Numerator, Denominator) = (Numerator / gcd(Numerator,Denominator),Denominator / gcd(Numerator,Denominator))
+         
+
+        if Numerator < 0 and Denominator < 0:
+            Numerator = abs(Numerator)
+            Denominator = abs(Denominator)
+            
+        elif Numerator > 0 and Denominator <0 :
+            Denominator = abs(Denominator)
+            Numerator = -1 * Numerator
+        
+        self.Numerator = int(Numerator) 
+        self.Denominator = int(Denominator) 
 
     def getDenominator(self):
-        return self.Denominator 
+        return self.Denominator
 
     def getNumerator(self):
-        self.Numerator
+        return self.Numerator
 
-    def toString(self):
+    def __str__(self):
         if self.Denominator == 1:
-            return str(self.numer)  
-        
+            return str(self.Numerator)
+
         else:
-           return str(self.numer)  + '/'  +  str(self.denom)
-    
-    def add( self, rnum):
+            return str(self.Numerator) + '/' + str(self.Denominator)
+
+    def add(self, other):
         '''Add two Rationals'''
 
-        if type(rnum) == RationalNumber:
+        if type(other) == RationalNumber:
             # find the lcm
-            the_lcm = lcm(self.Denominator, rnum.Denominator)
+            the_lcm = lcm(self.Denominator, other.Denominator)
             # multiply each numerator by the lcm, then add
             numerator_sum = the_lcm*self.Numerator/self.Denominator + \
-                        the_lcm*rnum.Numerator/rnum.Denominator
-            return RationalNumber( int(numerator_sum), the_lcm )
+            the_lcm*other.Numerator/other.Denominator
+            return RationalNumber(int(numerator_sum), the_lcm)
         else:
             print("Wrong type in addition method.")
-            raise(ValueError)
-        
-        
-    
-    def subtract( self, rnum):
-        if
-        the_lcm = lcm(self.denom, param_Rational.denom)
-        # multiply each numerator by the lcm, then add
-        numerator_sum = the_lcm*self.numer/self.denom - \
-                    the_lcm*param_Rational.numer/param_Rational.denom
-        return Rational( int(numerator_sum), the_lcm )
+            raise ValueError
 
-    def multiply( self, rnum):
-       '''multiply two Rationals'''
-        if type(rnum) == RationalNumber:
+    def subtract(self, other):
+        '''subtract two Rationals'''
+        if type(other) == RationalNumber:
+            the_lcm = lcm(self.Denominator, other.Denominator)
+            # multiply each numerator by the lcm, then add
+            numerator_sum = the_lcm*self.Numerator/self.Denominator - \
+            the_lcm*other.Numerator/other.Denominator
+            return RationalNumber(int(numerator_sum), the_lcm)
+
+    def multiply(self, other):
+        '''multiply two Rationals'''
+
+        if type(other) == RationalNumber:
             # multiply  numerator
-            numerator_mul = self.Numerator * rnum.Numerator
+            numerator_mul = self.Numerator * other.Numerator
             # multiply denominator
-            denominator_mul = self.Denominator * rnum.Denominator
-            return RationalNumber( int( numerator_mul), int(denominator_mul))
+            denominator_mul = self.Denominator * other.Denominator
+            return RationalNumber(int(numerator_mul), int(denominator_mul))
         else:
             print("Wrong type in multiplication method.")
-            raise(ValueError)
-    def divide( self, rnum):
+            raise ValueError
+
+    def divide(self, other):
         '''divide two Rationals'''
-        if type(rnum) == RationalNumber:
-            # multiply  numerator
-            numerator_mul = self.Numerator * rnum.Denominator
+
+        if type(other) == RationalNumber:
+               # multiply  numerator
+            if other.Numerator ==0:
+                raise ZeroDivisionError("Numerator of divisor can't be 0")
+            numerator_mul = self.Numerator * other.Denominator
             # multiply denominator
-            denominator_mul = self.Denominator * rnum.Numerator
-            return RationalNumber( int( numerator_mul), int(denominator_mul))
+            denominator_mul = self.Denominator * other.Numerator
+            return RationalNumber(int( numerator_mul), int(denominator_mul))
         else:
             print("Wrong type in division method.")
-            raise(ValueError)
+            raise ValueError
+
 
